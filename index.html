@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08090c">
-<title>VK X Player</title>
+<title>AURA X</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,14 +12,21 @@
 </head>
 <body>
 
+<div class="wallpaper" id="wallpaper"></div>
+
 <div class="app">
 
   <!-- ============ ПЛЕЕР ============ -->
   <section class="screen" data-screen="player">
     <div class="hero">
-      <div class="disc-wrap">
-        <div class="disc" id="disc"><img id="cover" alt=""></div>
+      <div class="disc-wrap" id="discWrap">
+        <div class="disc vinyl" id="disc"><img id="cover" alt=""></div>
+        <div class="disc-glass" id="discGlass"></div>
+        <div class="disc-neon" id="discNeon"></div>
       </div>
+
+      <canvas id="viz" width="360" height="90"></canvas>
+
       <div class="np-meta">
         <div class="np-title" id="npTitle">Ничего не играет</div>
         <div class="np-artist" id="npArtist">Выберите трек в поиске</div>
@@ -33,9 +40,9 @@
       <div class="seek-row">
         <span class="time" id="tCur">0:00</span>
         <div class="seekbar" id="seekbar">
+          <div class="seek-buffer" id="seekBuffer"></div>
           <div class="seek-fill" id="seekFill"></div>
           <div class="seek-thumb" id="seekThumb"></div>
-          <div class="seek-buffer" id="seekBuffer"></div>
         </div>
         <span class="time" id="tDur">0:00</span>
       </div>
@@ -62,8 +69,8 @@
 
       <div class="vol-row">
         <button class="ctl small" id="muteBtn" aria-label="Mute">
-          <svg id="icoVol" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-          <svg id="icoMute" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" hidden><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>
+          <svg id="icoVol" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <svg id="icoMute" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" hidden><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3z"/></svg>
         </button>
         <div class="volbar" id="volbar">
           <div class="vol-fill" id="volFill"></div>
@@ -77,48 +84,117 @@
   </section>
 
   <!-- ============ ПОИСК ============ -->
-  <section class="screen" data-screen="search">
+  <section class="screen active" data-screen="search">
     <div class="search-head">
       <div class="search-box" id="searchBox">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-        <input type="text" id="q" placeholder="Искать в Audius + Piped…" autocomplete="off" spellcheck="false">
+        <input type="text" id="q" placeholder="Искать: Alex G, cupsize, Yung Trappa…" autocomplete="off" spellcheck="false">
         <div class="spin" id="spin" hidden></div>
       </div>
+
+      <div class="src-row" id="srcRow">
+        <button class="src-btn active" data-src="all">🌐 Все источники</button>
+        <button class="src-btn" data-src="piped">🔴 YouTube</button>
+        <button class="src-btn" data-src="soundcloud">☁️ SoundCloud</button>
+      </div>
+
       <div class="chips" id="chips">
-        <button class="chip">Phonk</button>
-        <button class="chip">The Weeknd</button>
-        <button class="chip">Synthwave</button>
-        <button class="chip">Daft Punk</button>
-        <button class="chip">Lo-Fi</button>
+        <button class="chip" data-mood="Russian Rap">Русский Рэп</button>
+        <button class="chip" data-mood="Phonk">Phonk</button>
+        <button class="chip" data-mood="Slowed Reverb">Slowed + Reverb</button>
+        <button class="chip" data-mood="Lo-Fi Chill">Lo-Fi / Chill</button>
+        <button class="chip" data-mood="English Hits">English Hits</button>
+        <button class="chip" data-mood="Sad Depressive">Sad / Depressive</button>
+        <button class="chip" data-mood="Alex G">Alex G</button>
+        <button class="chip" data-mood="Скриптонит">Скриптонит</button>
       </div>
     </div>
     <div class="results" id="results"></div>
   </section>
 
-  <!-- ============ ИЗБРАННОЕ ============ -->
-  <section class="screen" data-screen="favs">
-    <div class="favs-head">
-      <h1>Избранное</h1>
-      <span class="favs-meta" id="favsMeta">Ваш плейлист сохранённых треков</span>
+  <!-- ============ МЕДИАТЕКА ============ -->
+  <section class="screen" data-screen="library">
+    <div class="lib-head">
+      <h1>Медиатека</h1>
+      <button class="btn-new-pl" id="btnNewPl">+ Новый плейлист</button>
     </div>
+    <div class="playlists" id="playlists"></div>
+    <div class="section-label">Избранное</div>
     <div class="results" id="favsList"></div>
   </section>
 
-  <!-- ============ НАСТРОЙКИ ============ -->
-  <section class="screen" data-screen="settings">
-    <h1 class="screen-title">Настройки</h1>
+  <!-- ============ СТИЛЬ ============ -->
+  <section class="screen" data-screen="style">
+    <h1 class="screen-title">Стиль</h1>
 
     <div class="settings-group">
-      <div class="section-label">Скорость воспроизведения</div>
+      <div class="section-label">Обои</div>
+      <button class="upload-wall" id="btnUploadWall">📁 Загрузить свои обои</button>
+      <input type="file" id="wallInput" accept="image/*" hidden>
+      <button class="btn-ghost" id="btnResetWall" hidden>Сбросить обои</button>
+
       <div class="set-row">
-        <span class="set-name">Playback Rate</span>
+        <span class="set-name">Размытие фона</span>
+        <span class="set-val" id="blurVal">16 px</span>
+      </div>
+      <div class="slider-row">
+        <input type="range" id="blurSlider" min="0" max="40" step="1" value="16">
+      </div>
+
+      <div class="set-row">
+        <span class="set-name">Затемнение фона</span>
+        <span class="set-val" id="dimVal">50%</span>
+      </div>
+      <div class="slider-row">
+        <input type="range" id="dimSlider" min="0" max="100" step="1" value="50">
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="section-label">Стиль обложки</div>
+      <div class="style-grid">
+        <button class="style-btn" data-disc="vinyl">
+          <div class="style-preview vinyl-prev"></div>
+          <span>Винил</span>
+        </button>
+        <button class="style-btn" data-disc="glass">
+          <div class="style-preview glass-prev"></div>
+          <span>Glass Card</span>
+        </button>
+        <button class="style-btn" data-disc="neon">
+          <div class="style-preview neon-prev"></div>
+          <span>Neon Glow</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="section-label">Тема акцентов</div>
+      <div class="theme-grid" id="themes">
+        <button class="theme" data-theme="violet"><i></i>VK X Violet</button>
+        <button class="theme" data-theme="cyan"><i></i>Lane Cyan</button>
+        <button class="theme" data-theme="pink"><i></i>Neon Pink</button>
+        <button class="theme" data-theme="emerald"><i></i>Emerald</button>
+        <button class="theme" data-theme="gold"><i></i>Cyberpunk Gold</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ЗВУК ============ -->
+  <section class="screen" data-screen="sound">
+    <h1 class="screen-title">Звук</h1>
+
+    <div class="settings-group">
+      <div class="section-label">Slowed & Speed Up</div>
+      <div class="set-row">
+        <span class="set-name">Скорость воспроизведения</span>
         <span class="set-val" id="rateVal">×1.00</span>
       </div>
       <div class="slider-row">
         <input type="range" id="rateSlider" min="0.5" max="1.5" step="0.01" value="1">
       </div>
       <label class="toggle-row">
-        <span class="toggle-label">Preserve Pitch (замедление сохраняет тон)</span>
+        <span class="toggle-label">Pitch Lock (сохраняет тон при изменении скорости)</span>
         <div class="toggle" data-k="preservePitch"><div class="toggle-knob"></div></div>
       </label>
     </div>
@@ -139,27 +215,24 @@
     </div>
 
     <div class="settings-group">
-      <div class="section-label">Тема интерфейса</div>
-      <div class="theme-grid" id="themes">
-        <button class="theme" data-theme="violet"><i></i>VK X Violet</button>
-        <button class="theme" data-theme="cyan"><i></i>Lane Cyan</button>
-        <button class="theme" data-theme="pink"><i></i>Neon Pink</button>
-        <button class="theme" data-theme="emerald"><i></i>Emerald</button>
-      </div>
+      <div class="section-label">Визуализатор</div>
+      <label class="toggle-row">
+        <span class="toggle-label">Canvas-визуализатор под обложкой (выкл для экономии батареи)</span>
+        <div class="toggle" data-k="vizOn"><div class="toggle-knob"></div></div>
+      </label>
     </div>
 
     <div class="settings-group">
-      <div class="section-label">Источники</div>
-      <div class="set-row"><span class="set-name">Audius (полные MP3)</span><span class="set-val green" id="srcAudius">готов</span></div>
-      <div class="set-row"><span class="set-name">Piped (резерв)</span><span class="set-val green" id="srcPiped">готов</span></div>
+      <div class="section-label">Источники поиска</div>
+      <div class="set-row"><span class="set-name">🔴 YouTube (Piped)</span><span class="set-val green" id="statPiped">—</span></div>
+      <div class="set-row"><span class="set-name">🔴 YouTube (Invidious)</span><span class="set-val green" id="statInv">—</span></div>
+      <div class="set-row"><span class="set-name">☁️ SoundCloud (v2)</span><span class="set-val green" id="statSc">—</span></div>
     </div>
 
-    <div class="footer-note">VK X Player · Glassmorphism · 60 FPS · все потоки идут напрямую</div>
+    <div class="footer-note">AURA X · все потоки идут напрямую · без бэкенда</div>
   </section>
-
 </div>
 
-<!-- Bottom Nav -->
 <nav class="bottom-nav">
   <button class="nav-btn" data-nav="player">
     <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
@@ -169,18 +242,22 @@
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
     <span>Поиск</span>
   </button>
-  <button class="nav-btn" data-nav="favs">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    <span>Избранное</span>
+  <button class="nav-btn" data-nav="library">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+    <span>Медиатека</span>
   </button>
-  <button class="nav-btn" data-nav="settings">
+  <button class="nav-btn" data-nav="style">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+    <span>Стиль</span>
+  </button>
+  <button class="nav-btn" data-nav="sound">
     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <span>Настройки</span>
+    <span>Звук</span>
   </button>
 </nav>
 
 <div id="toasts"></div>
-<audio id="audio" preload="auto" playsinline></audio>
+<audio id="audio" preload="auto" playsinline crossorigin="anonymous"></audio>
 
 <script src="script.js"></script>
 </body>
