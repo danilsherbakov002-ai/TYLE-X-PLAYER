@@ -1,39 +1,46 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="violet">
+<html lang="ru" data-theme="coral">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#08090c">
-<title>AURA X</title>
+<meta name="theme-color" content="#050505">
+<title>AURA X · Lane Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="wallpaper" id="wallpaper"></div>
+<div class="dyn-bg"></div>
 
 <div class="app">
 
-  <!-- ============ ПЛЕЕР ============ -->
+  <!-- ================= ПЛЕЕР ================= -->
   <section class="screen" data-screen="player">
     <div class="hero">
-      <div class="disc-wrap" id="discWrap">
-        <div class="disc vinyl" id="disc"><img id="cover" alt=""></div>
-        <div class="disc-glass" id="discGlass"></div>
-        <div class="disc-neon" id="discNeon"></div>
+
+      <div class="seg" id="seg">
+        <button class="seg-btn active" data-fx="orig">Original</button>
+        <button class="seg-btn" data-fx="speed">Speed Up</button>
+        <button class="seg-btn" data-fx="slowed">Slowed</button>
       </div>
 
-      <canvas id="viz" width="360" height="90"></canvas>
+      <div class="art-wrap card" id="artWrap">
+        <img id="cover" alt="">
+      </div>
 
-      <div class="np-meta">
-        <div class="np-title" id="npTitle">Ничего не играет</div>
-        <div class="np-artist" id="npArtist">Выберите трек в поиске</div>
+      <canvas id="viz" width="360" height="46"></canvas>
+
+      <div class="np-row">
+        <div class="np-meta">
+          <div class="np-title" id="npTitle">Ничего не играет</div>
+          <div class="np-artist" id="npArtist">Найдите трек в поиске</div>
+        </div>
         <div class="pills">
           <span class="pill" id="pillSrc" hidden></span>
           <span class="pill" id="pillQ" hidden></span>
-          <span class="pill" id="pillFx" hidden>FX</span>
         </div>
       </div>
 
@@ -48,216 +55,179 @@
       </div>
 
       <div class="controls">
-        <button class="ctl" id="btnShuffle" aria-label="Перемешать">
+        <button class="ctl" id="btnShuffle" aria-label="Shuffle">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
         </button>
-        <button class="ctl" id="btnPrev" aria-label="Предыдущий">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M18 6l-8.5 6L18 18V6zM6 6h2v12H6z"/></svg>
+        <button class="ctl" id="btnPrev" aria-label="Prev">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M18 6l-8.5 6L18 18V6zM6 6h2v12H6z"/></svg>
         </button>
-        <button class="ctl big" id="btnPlay" aria-label="Play/Pause">
+        <button class="ctl play" id="btnPlay" aria-label="Play">
           <svg id="icoPlay" viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           <svg id="icoPause" viewBox="0 0 24 24" width="30" height="30" fill="currentColor" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
         </button>
-        <button class="ctl" id="btnNext" aria-label="Следующий">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M6 6l8.5 6L6 18V6zM16 6h2v12h-2z"/></svg>
+        <button class="ctl" id="btnNext" aria-label="Next">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6 6l8.5 6L6 18V6zM16 6h2v12h-2z"/></svg>
         </button>
-        <button class="ctl" id="btnRepeat" aria-label="Повтор">
+        <button class="ctl" id="btnRepeat" aria-label="Repeat">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
           <span class="rep" id="repBadge"></span>
         </button>
       </div>
 
-      <div class="vol-row">
-        <button class="ctl small" id="muteBtn" aria-label="Mute">
-          <svg id="icoVol" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-          <svg id="icoMute" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" hidden><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3z"/></svg>
+      <div class="actions">
+        <button class="act" id="btnFav">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span id="likeCount">0</span>
         </button>
-        <div class="volbar" id="volbar">
-          <div class="vol-fill" id="volFill"></div>
-          <div class="vol-thumb" id="volThumb"></div>
+        <button class="act" id="btnAddPl">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="12" y1="6" x2="12" y2="12"/><line x1="9" y1="9" x2="15" y2="9"/></svg>
+        </button>
+        <div class="vol-mini">
+          <button class="act" id="muteBtn">
+            <svg id="icoVol" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <svg id="icoMute" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" hidden><path d="M4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3z"/></svg>
+          </button>
+          <div class="volbar" id="volbar"><div class="vol-fill" id="volFill"></div><div class="vol-thumb" id="volThumb"></div></div>
         </div>
-        <button class="btn-fav" id="btnFav" aria-label="В избранное">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <button class="act" id="btnShare">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></svg>
+        </button>
+        <button class="act" id="btnDl">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
       </div>
     </div>
   </section>
 
-  <!-- ============ ПОИСК ============ -->
+  <!-- ================= ПОИСК ================= -->
   <section class="screen active" data-screen="search">
     <div class="search-head">
-      <div class="search-box" id="searchBox">
+      <div class="search-box">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-        <input type="text" id="q" placeholder="Искать: Alex G, cupsize, Yung Trappa…" autocomplete="off" spellcheck="false">
+        <input type="text" id="q" placeholder="Yung Trappa, урал гайсинг, phonk…" autocomplete="off" spellcheck="false">
         <div class="spin" id="spin" hidden></div>
       </div>
-
       <div class="src-row" id="srcRow">
-        <button class="src-btn active" data-src="all">🌐 Все источники</button>
-        <button class="src-btn" data-src="piped">🔴 YouTube</button>
-        <button class="src-btn" data-src="soundcloud">☁️ SoundCloud</button>
+        <button class="src-btn active" data-src="all">🌐 Все</button>
+        <button class="src-btn" data-src="yt">🔴 YouTube</button>
+        <button class="src-btn" data-src="sc">☁️ SoundCloud</button>
+        <button class="src-btn" data-src="audius">⚡ Audius</button>
+        <button class="src-btn" data-src="arc">📦 Archive</button>
       </div>
-
       <div class="chips" id="chips">
-        <button class="chip" data-mood="Russian Rap">Русский Рэп</button>
+        <button class="chip" data-mood="Русский рэп">Русский Рэп</button>
         <button class="chip" data-mood="Phonk">Phonk</button>
-        <button class="chip" data-mood="Slowed Reverb">Slowed + Reverb</button>
-        <button class="chip" data-mood="Lo-Fi Chill">Lo-Fi / Chill</button>
-        <button class="chip" data-mood="English Hits">English Hits</button>
-        <button class="chip" data-mood="Sad Depressive">Sad / Depressive</button>
-        <button class="chip" data-mood="Alex G">Alex G</button>
-        <button class="chip" data-mood="Скриптонит">Скриптонит</button>
+        <button class="chip" data-mood="Yung Trappa">Yung Trappa</button>
+        <button class="chip" data-mood="Slowed and reverb">Slowed + Reverb</button>
+        <button class="chip" data-mood="Lo-fi chill">Lo-Fi / Chill</button>
+        <button class="chip" data-mood="English hits">English Hits</button>
+        <button class="chip" data-mood="Sad depressive">Sad / Depressive</button>
       </div>
+      <div class="res-meta" id="resMeta"></div>
     </div>
     <div class="results" id="results"></div>
   </section>
 
-  <!-- ============ МЕДИАТЕКА ============ -->
+  <!-- ================= МЕДИАТЕКА ================= -->
   <section class="screen" data-screen="library">
     <div class="lib-head">
       <h1>Медиатека</h1>
-      <button class="btn-new-pl" id="btnNewPl">+ Новый плейлист</button>
+      <button class="btn-new" id="btnNewPl">+ Плейлист</button>
     </div>
     <div class="playlists" id="playlists"></div>
-    <div class="section-label">Избранное</div>
+    <div class="section-label">❤️ Избранное</div>
     <div class="results" id="favsList"></div>
   </section>
 
-  <!-- ============ СТИЛЬ ============ -->
+  <!-- ================= СТИЛЬ ================= -->
   <section class="screen" data-screen="style">
     <h1 class="screen-title">Стиль</h1>
 
-    <div class="settings-group">
-      <div class="section-label">Обои</div>
-      <button class="upload-wall" id="btnUploadWall">📁 Загрузить свои обои</button>
+    <div class="card-g">
+      <div class="section-label">Обои фона</div>
+      <button class="btn-wall" id="btnUploadWall">📁 Загрузить свои обои</button>
       <input type="file" id="wallInput" accept="image/*" hidden>
       <button class="btn-ghost" id="btnResetWall" hidden>Сбросить обои</button>
-
-      <div class="set-row">
-        <span class="set-name">Размытие фона</span>
-        <span class="set-val" id="blurVal">16 px</span>
-      </div>
-      <div class="slider-row">
-        <input type="range" id="blurSlider" min="0" max="40" step="1" value="16">
-      </div>
-
-      <div class="set-row">
-        <span class="set-name">Затемнение фона</span>
-        <span class="set-val" id="dimVal">50%</span>
-      </div>
-      <div class="slider-row">
-        <input type="range" id="dimSlider" min="0" max="100" step="1" value="50">
-      </div>
+      <div class="set-row"><span class="set-name">Размытие</span><span class="set-val" id="blurVal">16 px</span></div>
+      <div class="slider-row"><input type="range" id="blurSlider" min="0" max="40" value="16"></div>
+      <div class="set-row"><span class="set-name">Затемнение</span><span class="set-val" id="dimVal">55%</span></div>
+      <div class="slider-row"><input type="range" id="dimSlider" min="0" max="100" value="55"></div>
     </div>
 
-    <div class="settings-group">
+    <div class="card-g">
       <div class="section-label">Стиль обложки</div>
       <div class="style-grid">
-        <button class="style-btn" data-disc="vinyl">
-          <div class="style-preview vinyl-prev"></div>
-          <span>Винил</span>
-        </button>
-        <button class="style-btn" data-disc="glass">
-          <div class="style-preview glass-prev"></div>
-          <span>Glass Card</span>
-        </button>
-        <button class="style-btn" data-disc="neon">
-          <div class="style-preview neon-prev"></div>
-          <span>Neon Glow</span>
-        </button>
+        <button class="style-btn" data-disc="card"><div class="style-preview p-card"></div><span>Glass Card</span></button>
+        <button class="style-btn" data-disc="vinyl"><div class="style-preview p-vinyl"></div><span>Винил</span></button>
+        <button class="style-btn" data-disc="neon"><div class="style-preview p-neon"></div><span>Neon Glow</span></button>
       </div>
     </div>
 
-    <div class="settings-group">
+    <div class="card-g">
       <div class="section-label">Тема акцентов</div>
       <div class="theme-grid" id="themes">
-        <button class="theme" data-theme="violet"><i></i>VK X Violet</button>
+        <button class="theme" data-theme="coral"><i></i>Lane Coral</button>
+        <button class="theme" data-theme="violet"><i></i>VK Violet</button>
         <button class="theme" data-theme="cyan"><i></i>Lane Cyan</button>
         <button class="theme" data-theme="pink"><i></i>Neon Pink</button>
         <button class="theme" data-theme="emerald"><i></i>Emerald</button>
-        <button class="theme" data-theme="gold"><i></i>Cyberpunk Gold</button>
+        <button class="theme" data-theme="gold"><i></i>Cyber Gold</button>
       </div>
     </div>
   </section>
 
-  <!-- ============ ЗВУК ============ -->
+  <!-- ================= ЗВУК ================= -->
   <section class="screen" data-screen="sound">
     <h1 class="screen-title">Звук</h1>
 
-    <div class="settings-group">
-      <div class="section-label">Slowed & Speed Up</div>
-      <div class="set-row">
-        <span class="set-name">Скорость воспроизведения</span>
-        <span class="set-val" id="rateVal">×1.00</span>
-      </div>
-      <div class="slider-row">
-        <input type="range" id="rateSlider" min="0.5" max="1.5" step="0.01" value="1">
-      </div>
-      <label class="toggle-row">
-        <span class="toggle-label">Pitch Lock (сохраняет тон при изменении скорости)</span>
-        <div class="toggle" data-k="preservePitch"><div class="toggle-knob"></div></div>
-      </label>
+    <div class="card-g">
+      <div class="section-label">Скорость и питч</div>
+      <div class="set-row"><span class="set-name">Playback Rate</span><span class="set-val" id="rateVal">×1.00</span></div>
+      <div class="slider-row"><input type="range" id="rateSlider" min="0.5" max="1.5" step="0.01" value="1"></div>
+      <label class="toggle-row"><span class="toggle-label">Pitch Lock (тон не меняется со скоростью)</span>
+        <div class="toggle" data-k="preservePitch"><div class="toggle-knob"></div></div></label>
+      <div class="set-row"><span class="set-name">Reverb (эхо)</span><span class="set-val" id="reverbVal">0%</span></div>
+      <div class="slider-row"><input type="range" id="reverbSlider" min="0" max="1" step="0.01" value="0"></div>
     </div>
 
-    <div class="settings-group">
+    <div class="card-g">
       <div class="section-label">Bass Boost</div>
-      <label class="toggle-row">
-        <span class="toggle-label">Усиление низких частот (100 Hz)</span>
-        <div class="toggle" data-k="bassOn"><div class="toggle-knob"></div></div>
-      </label>
-      <div class="set-row">
-        <span class="set-name">Усиление</span>
-        <span class="set-val" id="bassVal">+0 dB</span>
-      </div>
-      <div class="slider-row">
-        <input type="range" id="bassSlider" min="0" max="20" step="0.5" value="8">
-      </div>
+      <label class="toggle-row"><span class="toggle-label">Усиление НЧ (lowshelf 100 Hz)</span>
+        <div class="toggle" data-k="bassOn"><div class="toggle-knob"></div></div></label>
+      <div class="set-row"><span class="set-name">Усиление</span><span class="set-val" id="bassVal">+8 dB</span></div>
+      <div class="slider-row"><input type="range" id="bassSlider" min="0" max="20" step="0.5" value="8"></div>
     </div>
 
-    <div class="settings-group">
+    <div class="card-g">
       <div class="section-label">Визуализатор</div>
-      <label class="toggle-row">
-        <span class="toggle-label">Canvas-визуализатор под обложкой (выкл для экономии батареи)</span>
-        <div class="toggle" data-k="vizOn"><div class="toggle-knob"></div></div>
-      </label>
+      <label class="toggle-row"><span class="toggle-label">Волны под обложкой (выкл = экономия батареи)</span>
+        <div class="toggle" data-k="vizOn"><div class="toggle-knob"></div></div></label>
     </div>
 
-    <div class="settings-group">
-      <div class="section-label">Источники поиска</div>
-      <div class="set-row"><span class="set-name">🔴 YouTube (Piped)</span><span class="set-val green" id="statPiped">—</span></div>
-      <div class="set-row"><span class="set-name">🔴 YouTube (Invidious)</span><span class="set-val green" id="statInv">—</span></div>
-      <div class="set-row"><span class="set-name">☁️ SoundCloud (v2)</span><span class="set-val green" id="statSc">—</span></div>
+    <div class="card-g">
+      <div class="section-label">Статус источников</div>
+      <div class="set-row"><span class="set-name">🔴 Piped (YouTube)</span><span class="set-val" id="statPiped">—</span></div>
+      <div class="set-row"><span class="set-name">🔴 Invidious (YouTube)</span><span class="set-val" id="statInv">—</span></div>
+      <div class="set-row"><span class="set-name">☁️ SoundCloud v2</span><span class="set-val" id="statSc">—</span></div>
+      <div class="set-row"><span class="set-name">⚡ Audius</span><span class="set-val" id="statAudius">—</span></div>
+      <div class="set-row"><span class="set-name">📦 Archive.org</span><span class="set-val" id="statArc">—</span></div>
     </div>
 
-    <div class="footer-note">AURA X · все потоки идут напрямую · без бэкенда</div>
+    <div class="footer-note">AURA X · Lane Edition · потоки напрямую из сети</div>
   </section>
 </div>
 
 <nav class="bottom-nav">
-  <button class="nav-btn" data-nav="player">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
-    <span>Плеер</span>
-  </button>
-  <button class="nav-btn active" data-nav="search">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg>
-    <span>Поиск</span>
-  </button>
-  <button class="nav-btn" data-nav="library">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-    <span>Медиатека</span>
-  </button>
-  <button class="nav-btn" data-nav="style">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-    <span>Стиль</span>
-  </button>
-  <button class="nav-btn" data-nav="sound">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <span>Звук</span>
-  </button>
+  <button class="nav-btn" data-nav="player"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg><span>Плеер</span></button>
+  <button class="nav-btn active" data-nav="search"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.6" y2="16.6"/></svg><span>Поиск</span></button>
+  <button class="nav-btn" data-nav="library"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg><span>Медиатека</span></button>
+  <button class="nav-btn" data-nav="style"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg><span>Стиль</span></button>
+  <button class="nav-btn" data-nav="sound"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>Звук</span></button>
 </nav>
 
 <div id="toasts"></div>
-<audio id="audio" preload="auto" playsinline crossorigin="anonymous"></audio>
+<audio id="aMain" preload="auto" playsinline crossorigin="anonymous"></audio>
+<audio id="aSafe" preload="auto" playsinline></audio>
 
 <script src="script.js"></script>
 </body>
